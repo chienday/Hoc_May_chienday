@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.neural_network import MLPRegressor
-from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import BaggingRegressor,StackingRegressor
 from sklearn.preprocessing import OrdinalEncoder
 
 
@@ -27,7 +27,8 @@ regressor.fit(X_train, Y_train)
 lassoreg = Lasso(alpha=1)
 lassoreg.fit(X_train, Y_train)
 
-mlp_model_neural = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=0)
+#neural
+mlp_model_neural = MLPRegressor(hidden_layer_sizes=(200, 100), max_iter=2000, random_state=0)
 mlp_model_neural.fit(X_train, Y_train)
 
 # Create Bagging models
@@ -45,7 +46,25 @@ bagging_model3 = BaggingRegressor(model_3,n_estimators=5,random_state=2)
 bagging_model3.fit(X_train,Y_train)
 models=[model_1,model_2,model_3]
 
+#Tạo các base model stacking
 
+base_models = [
+    ('neural', MLPRegressor(hidden_layer_sizes=(200, 100), max_iter=2000, random_state=0)),
+    ('linear', LinearRegression()),
+    ('lasso', Lasso(alpha=1))
+]
+
+Stacking_model = StackingRegressor(
+    estimators=base_models,
+    final_estimator=LinearRegression()
+)
+#Huấn luyện mô hình
+Stacking_model.fit(X_train, Y_train)
+
+#Dự đoán giá trị
+y_pred_stacking = Stacking_model.predict(X_test)
+#Huấn luyện mô hình
+Stacking_model.fit(X_train, Y_train)
 # Streamlit interface
 st.title("Dự đoán kết quả học tập của học sinh")
 
@@ -74,6 +93,8 @@ if submitted:
     bagging = [model.predict(features)[0] for model in models]
     final_prediction = sum(bagging) / len(models)
     out4= min(max(final_prediction, 0), 100)
+    stacking = Stacking_model.predict(features)[0]
+    out5= min(max(stacking, 0), 100)
 
     # Display results
     st.subheader("Kết quả điểm cuối kì:")
@@ -81,3 +102,4 @@ if submitted:
     st.write(f"**Lasso Regression:** {out2:.2f}")
     st.write(f"**Neural Network (MLP):** {out3:.2f}")
     st.write(f"**Bagging:** {out4:.2f}")
+    st.write(f"**Stacking:** {out5:.2f}")   
