@@ -24,7 +24,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, test_s
 regressor = LinearRegression()
 regressor.fit(X_train, Y_train)
 
-lassoreg = Lasso(alpha=0.01)
+lassoreg = Lasso(alpha=1)
 lassoreg.fit(X_train, Y_train)
 
 mlp_model_neural = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=0)
@@ -33,15 +33,15 @@ mlp_model_neural.fit(X_train, Y_train)
 # Create Bagging models
 #  Bagging1
 model_1 = regressor
-bagging_model1 = BaggingRegressor(model_1,n_estimators=10,random_state=0)
+bagging_model1 = BaggingRegressor(model_1,n_estimators=5,random_state=2)
 bagging_model1.fit(X_train,Y_train)
 #  Bagging2
 model_2=lassoreg
-bagging_model2 = BaggingRegressor(model_2,n_estimators=10,random_state=0)
+bagging_model2 = BaggingRegressor(model_2,n_estimators=5,random_state=2)
 bagging_model2.fit(X_train,Y_train)
 #  Bagging3
 model_3=mlp_model_neural
-bagging_model3 = BaggingRegressor(model_3,n_estimators=10,random_state=0)
+bagging_model3 = BaggingRegressor(model_3,n_estimators=5,random_state=2)
 bagging_model3.fit(X_train,Y_train)
 models=[model_1,model_2,model_3]
 
