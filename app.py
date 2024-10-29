@@ -52,9 +52,9 @@ st.title("Dự đoán kết quả học tập của học sinh")
 # Create a form for user input
 with st.form("input_form"):
     a = st.slider("Số phần trăm các lớp học mà học sinh tham gia", 0, 100, 1)
-    b = st.number_input("Số giờ mà học sinh dành cho việc học mỗi tuần:", value=0)
+    b = st.number_input("Số giờ mà học sinh dành cho việc học mỗi tuần:",min_value=0, value=0)
     c = st.slider("Điểm học sinh đạt được trong kì trước(thang điểm 100):", 0, 100, 1)
-    d = st.number_input("Số lượng ngoại khóa mà học sinh tham gia:", value=0)
+    d = st.number_input("Số lượng ngoại khóa mà học sinh tham gia:", min_value=0,value=0)
     e = st.slider("Mức độ hỗ trợ của phụ huynh đối với học sinh:", 0, 2, 1)
 
     # Submit button
