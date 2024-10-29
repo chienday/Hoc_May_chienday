@@ -66,14 +66,14 @@ if submitted:
     
     # Predictions with all models
     linear = regressor.predict(features)[0]
-    out1= linear if linear > 0 else 0
+    out1= min(max(linear, 0), 100)
     lasso = lassoreg.predict(features)[0]
-    out2= lasso if lasso > 0 else 0
+    out2= min(max(lasso, 0), 100)
     mlp = mlp_model_neural.predict(features)[0]
-    out3= mlp if mlp > 0 else 0
+    out3= min(max(mlp, 0), 100)
     bagging = [model.predict(features)[0] for model in models]
     final_prediction = sum(bagging) / len(models)
-    out4= final_prediction if final_prediction > 0 else 0
+    out4= min(max(final_prediction, 0), 100)
 
     # Display results
     st.subheader("Kết quả điểm cuối kì:")
